@@ -1,31 +1,26 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { deleteData, getData } from "../services/AccessAPI";
+import { useNavigate, useParams } from "react-router-dom";
 
-export class DeleteUser extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
+export const DeleteUser = () => {
+    const params = useParams();
+    const id = params.id;
+    const navigate = useNavigate();
+    const [state, setState] = useState(
+        {
             fullName: '',
             userName: '',
             email: '',
             roles: [],
             loading: true
         }
+    );
 
-        this.onCancel = this.onCancel.bind(this);
-        this.onConfirmation = this.onConfirmation.bind(this);
-    }
-
-    componentDidMount() {
-        const { id } = this.props.match.params;
-
+    useEffect(() => {
         getData('api/User/GetUserDetails/' + id).then(
             (result) => {
-                console.log("Role for edit: ");
-                console.log(result);
                 if (result) {
-                    this.setState({
+                    setState({
                         fullName: result.fullName,
                         userName: result.userName,
                         email: result.email,
@@ -35,23 +30,19 @@ export class DeleteUser extends Component {
                 }
             }
         );
+    }, [])
+
+
+    const onCancel = () => {
+        navigate('/users');
     }
 
-    onCancel() {
-        const { history } = this.props;
-        history.push('/admin/users');
-    }
-
-    onConfirmation(e) {
+    const onConfirmation = (e) => {
         e.preventDefault();
-
-        const { id } = this.props.match.params;
-        const { history } = this.props;
-
         deleteData('api/User/Delete/' + id).then((result) => {
             let responseJson = result;
             if (responseJson) {
-                history.push('/admin/users');
+                navigate('/users');
             }
         }
         );
@@ -59,47 +50,45 @@ export class DeleteUser extends Component {
     }
 
 
-    render() {
-        return (
+    return (
+        <div>
+            <h2>::Delete user::</h2>
+            <h3>Are you sure you want to delete this?</h3>
             <div>
-                <h2>::Delete user::</h2>
-                <h3>Are you sure you want to delete this?</h3>
-                <div>
-                    <h4>User Information</h4>
-                    <dl class="row">
-                        <dt class="col-sm-2">
-                            Full Name:
-                        </dt>
-                        <dd class="col-sm-10">
-                            {this.state.fullName}
-                        </dd>
-                    </dl>
+                <h4>User Information</h4>
+                <dl className="row">
+                    <dt className="col-sm-2">
+                        Full Name:
+                    </dt>
+                    <dd className="col-sm-10">
+                        {state.fullName}
+                    </dd>
+                </dl>
 
-                    <dl class="row">
-                        <dt class="col-sm-2">
-                            User Name:
-                        </dt>
-                        <dd class="col-sm-10">
-                            {this.state.userName}
-                        </dd>
-                    </dl>
+                <dl className="row">
+                    <dt className="col-sm-2">
+                        User Name:
+                    </dt>
+                    <dd className="col-sm-10">
+                        {state.userName}
+                    </dd>
+                </dl>
 
-                    <dl class="row">
-                        <dt class="col-sm-2">
-                            Email:
-                        </dt>
-                        <dd class="col-sm-10">
-                            {this.state.email}
-                        </dd>
-                    </dl>
+                <dl className="row">
+                    <dt className="col-sm-2">
+                        Email:
+                    </dt>
+                    <dd className="col-sm-10">
+                        {state.email}
+                    </dd>
+                </dl>
 
-                    <form onSubmit={this.onConfirmation}>
-                        <input type="hidden" asp-for="Id" />
-                        <button type="submit" class="btn btn-danger">Delete</button> |
-                        <button onClick={this.onCancel} className="btn btn-primary">Back to List</button>
-                    </form>
-                </div>
+                <form onSubmit={e => onConfirmation(e)}>
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" className="btn btn-danger">Delete</button> |
+                    <button onClick={onCancel} className="btn btn-primary">Back to List</button>
+                </form>
             </div>
-        )
-    }
+        </div>
+    )
 }

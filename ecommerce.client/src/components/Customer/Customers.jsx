@@ -1,60 +1,43 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getData } from '../services/AccessAPI';
+import { useNavigate } from "react-router-dom";
 
-// export keyword is a new feature in ES6 let export your functions , 
-// variables so you can get access to them in other js files
 
-export class Customers extends Component {
-    //“Props” is a special keyword in React, which stands for properties and is being used for passing data from one component to another.
-    constructor(props) {
-
-        //If you do not call super(props) method, this. props will be undefined 
-        super(props);
-
-        this.OncustomerEdit = this.OncustomerEdit.bind(this);
-        this.OncustomerDelete = this.OncustomerDelete.bind(this);
-        this.onCustomerCreate = this.onCustomerCreate.bind(this);
-
-        this.state = {
+export const Customers = () => {
+    const navigate = useNavigate();
+    const [state, setState] = useState(
+        {
             customers: [],
             loading: true,
             failed: false,
             error: ''
         }
+    );
+
+    useEffect(() => {
+        populateCustomersData();
+    }, [])
+
+
+    const onCustomerCreate = () => {
+        navigate('/customer/create');
     }
 
-    /*Lifecycle Method: The componentDidMount() method runs after 
-    the component output has been rendered to the DOM.*/
-
-    componentDidMount() {
-        this.populateCustomersData();
+    const OncustomerEdit = (id) => {
+        navigate('/customer/edit/' + id);
     }
 
-    // Event handler for create button
-    onCustomerCreate() {
-        const { history } = this.props;
-        history.push('/banking/customer/create');
+    const OncustomerDelete = (id) => {
+        navigate('/customer/delete/' + id);
     }
 
-    // Event handler for edit button
-    OncustomerEdit(id) {
-        const { history } = this.props;
-        history.push('/banking/customer/edit/' + id);
-    }
-
-    // Event handler for delete button
-    OncustomerDelete(id) {
-        const { history } = this.props;
-        history.push('/banking/customer/delete/' + id);
-    }
-
-    populateCustomersData() {
+    const populateCustomersData = () => {
 
         getData(`api/Customer/getall`).then(
             (result) => {
                 let responseJson = result;
                 if (responseJson) {
-                    this.setState({
+                    setState({
                         customers: responseJson,
                         loading: false
                     });
@@ -63,7 +46,7 @@ export class Customers extends Component {
         );
     }
 
-    renderAllCustomersTable(customers) {
+    const renderAllCustomersTable = (customers) => {
         return (
             <table className="table table-striped">
                 <thead>
@@ -85,8 +68,8 @@ export class Customers extends Component {
                                 <td>{customer.email}</td>
                                 <td>{customer.contactNumber}</td>
                                 <td>{customer.address}</td>
-                                <td><button onClick={() => this.OncustomerEdit(customer.id)} className="btn btn-success">Edit</button> ||
-                                    <button onClick={() => this.OncustomerDelete(customer.id)} className="btn btn-danger">Delete</button></td>
+                                <td><button onClick={() => OncustomerEdit(customer.id)} className="btn btn-success">Edit</button> ||
+                                    <button onClick={() => OncustomerDelete(customer.id)} className="btn btn-danger">Delete</button></td>
                             </tr>
                         ))
                     }
@@ -95,23 +78,21 @@ export class Customers extends Component {
         );
     }
 
-    render() {
+    return (
+        <div>
+            <h2>Customer</h2>
+            <button onClick={() => onCustomerCreate()} className="btn btn-primary">Create</button>
+            
+            {(state.loading === true) && (
+                <p>
+                    <em>Loading...</em>
+                </p>
+            )}
 
-        let content = this.state.loading ? (
-            <p>
-                <em>Loading...</em>
-            </p>
-        ) : (
-            this.renderAllCustomersTable(this.state.customers)
-        )
-
-        return (
-            <div>
-                <h2>Customer</h2>
-                <button onClick={() => this.onCustomerCreate()} className="btn btn-primary">Create</button>
-                {content}
-            </div>
-        );
-    }
+            {(state.loading === false) && (
+                renderAllCustomersTable(state.customers)
+            )}
+        </div>
+    );
 
 }

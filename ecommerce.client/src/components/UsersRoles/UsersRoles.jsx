@@ -75,7 +75,6 @@ export default class UsersRole extends Component {
     }
 
     getAllRoles() {
-        //debugger;
         getData('api/Role/GetAll').then(
             (result) => {
                 if (result) {

@@ -24,6 +24,23 @@ namespace Ordering.Application.Commands.User.Create
         {
             try
             {
+                int count =  (from p in await  _identityService.GetAllUsersAsync() 
+                                   select p.id).Count();
+
+                // Sending a Role to the service 
+                if(count == 0)
+                {
+                    if(request.Roles.Count == 0)
+                    {
+                        request.Roles.Add("Admin");
+                    }
+                    else
+                    {
+                        request.Roles.Add("User");
+                    }
+                    
+                }
+
                 var result = await _identityService.CreateUserAsync(request.UserName, request.Password, request.Email, request.FullName, request.Roles);
                 return result.isSucceed ? 1 : 0;
             }

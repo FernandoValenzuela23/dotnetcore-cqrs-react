@@ -62,8 +62,6 @@ export function postData(endPoint, inputObj) {
 
     }
 
-    console.log(BASE_URL + endPoint);
-
     return fetch(BASE_URL + endPoint, payload)
     .then(function(response) {
         return response.json();

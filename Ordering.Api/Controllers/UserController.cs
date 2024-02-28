@@ -62,6 +62,7 @@ namespace Ordering.API.Controllers
         }
 
         [HttpGet("GetUserDetailsByUserName/{userName}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesDefaultResponseType(typeof(UserDetailsResponseDTO))]
         public async Task<IActionResult> GetUserDetailsByUserName(string userName)
         {
@@ -70,6 +71,7 @@ namespace Ordering.API.Controllers
         }
 
         [HttpPost("AssignRoles")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesDefaultResponseType(typeof(int))]
 
         public async Task<ActionResult> AssignRoles(AssignUsersRoleCommand command)
@@ -79,6 +81,7 @@ namespace Ordering.API.Controllers
         }
 
         [HttpPut("EditUserRoles")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesDefaultResponseType(typeof(int))]
 
         public async Task<ActionResult> EditUserRoles(UpdateUserRolesCommand command)
@@ -88,6 +91,7 @@ namespace Ordering.API.Controllers
         }
 
         [HttpGet("GetAllUserDetails")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesDefaultResponseType(typeof(UserDetailsResponseDTO))]
         public async Task<IActionResult> GetAllUserDetails()
         {
@@ -97,6 +101,7 @@ namespace Ordering.API.Controllers
 
 
         [HttpPut("EditUserProfile/{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesDefaultResponseType(typeof(int))]
         public async Task<ActionResult> EditUserProfile(string id, [FromBody] EditUserProfileCommand command)
         {

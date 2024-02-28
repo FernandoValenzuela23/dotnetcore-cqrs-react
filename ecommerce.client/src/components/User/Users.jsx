@@ -74,7 +74,7 @@ export const Users = () => {
             <h3>List of Users</h3>
             <button onClick={() => onUserCreate()} className="btn btn-primary">Create new user</button>
             {
-                state.loading == true && (
+                state.loading === true && (
                     <p>
                         <em>Loading...</em>
                     </p>
@@ -82,7 +82,7 @@ export const Users = () => {
             }
 
             {
-                (state.loading == false) && (
+                (state.loading === false) && (
                     renderAllUsersTable(state.users)
                 )
             }

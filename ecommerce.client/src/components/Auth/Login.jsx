@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { Container } from "reactstrap";
-import LoginMenu from "../LoginMenu";
 import { postDataForLogin } from "../services/AccessAPI";
 import SessionManager from "./SessionManager";
 

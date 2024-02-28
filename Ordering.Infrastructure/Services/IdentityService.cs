@@ -60,7 +60,17 @@ namespace Ordering.Infrastructure.Services
                 throw new ValidationException(result.Errors);
             }
 
+            //var newUser = await _userManager.FindByEmailAsync(user.Email);
+            var role = await _roleManager.GetRoleNameAsync(new IdentityRole(roles[0]));
+            IdentityRole iRole = new IdentityRole(roles[0]);
+            if (string.IsNullOrWhiteSpace(role))
+            {
+                var rolResult = await _roleManager.CreateAsync(iRole);
+            }
+
+
             var addUserRole = await _userManager.AddToRolesAsync(user, roles);
+
             if (!addUserRole.Succeeded)
             {
                 throw new ValidationException(addUserRole.Errors);

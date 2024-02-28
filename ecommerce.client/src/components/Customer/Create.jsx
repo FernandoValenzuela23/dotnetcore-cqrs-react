@@ -1,89 +1,73 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { postData } from "../services/AccessAPI";
+import { useNavigate } from "react-router-dom";
 
-export class Create extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
+export const Create = () => {
+    const navigate = useNavigate();
+    const [state, setState] = useState(
+        {
             firstName: '',
             lastName: '',
             email: '',
             contactNumber: '',
             address: ''
         }
+    );
 
-        this.onChange = this.onChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
-    }
-
-    onChange(e) {
-        this.setState({ [e.target.name]: e.target.value });
+    const onChange = (e) => {
+        setState({ ...state, [e.target.name]: e.target.value });
     }
 
 
-    onSubmit(e) {
+    const onSubmit = (e) => {
         e.preventDefault();
-        const { history } = this.props;
 
-        let customerObj = {
-            firstName: this.state.firstName,
-            lastName: this.state.lastName,
-            email: this.state.email,
-            contactNumber: this.state.contactNumber,
-            address: this.state.address
-        }
-
-
-        postData('api/Customer/Create', customerObj).then((result) => {
-            console.log('Customer obj: ',customerObj);
+        postData('api/Customer/Create', state).then((result) => {
             let responseJson = result;
             if (responseJson) {
-                history.push('/banking/customers');
+                navigate('/customers');
             }
         });
     }
 
-    render() {
-        return (
-            <div className="row">
-                <div className="col-md-4">
-                    <h3>Add new customer</h3>
-                    <form onSubmit={this.onSubmit}>
-                        <div className="form-group">
-                            <label className="control-label">First Name: </label>
-                            <input className="form-control" type="text" name="firstName" value={this.state.firstName} onChange={this.onChange}></input>
-                        </div>
+    return (
+        <div className="row">
+            <div className="col-md-4">
+                <h3>Add new customer</h3>
+                <form onSubmit={onSubmit}>
+                    <div className="form-group">
+                        <label className="control-label">First Name: </label>
+                        <input className="form-control" type="text" name="firstName" value={state.firstName} onChange={onChange}></input>
+                    </div>
 
-                        <div className="form-group">
-                            <label className="control-label">Last Name: </label>
-                            <input className="form-control" type="text" name="lastName" value={this.state.lastName} onChange={this.onChange}></input>
-                        </div>
+                    <div className="form-group">
+                        <label className="control-label">Last Name: </label>
+                        <input className="form-control" type="text" name="lastName" value={state.lastName} onChange={onChange}></input>
+                    </div>
 
-                        <div className="form-group">
-                            <label className="control-label">Email: </label>
-                            <input className="form-control" type="text" name="email" value={this.state.email} onChange={this.onChange}></input>
-                        </div>
+                    <div className="form-group">
+                        <label className="control-label">Email: </label>
+                        <input className="form-control" type="text" name="email" value={state.email} onChange={onChange}></input>
+                    </div>
 
-                        <div className="form-group">
-                            <label className="control-label">Contact Number: </label>
-                            <input className="form-control" type="text" name="contactNumber" value={this.state.contactNumber} onChange={this.onChange}></input>
-                        </div>
+                    <div className="form-group">
+                        <label className="control-label">Contact Number: </label>
+                        <input className="form-control" type="text" name="contactNumber" value={state.contactNumber} onChange={onChange}></input>
+                    </div>
 
-                        <div className="form-group">
-                            <label className="control-label">Address:  </label>
-                            <input className="form-control" type="text" name="address" value={this.state.address} onChange={this.onChange}></input>
-                        </div>
+                    <div className="form-group">
+                        <label className="control-label">Address:  </label>
+                        <input className="form-control" type="text" name="address" value={state.address} onChange={onChange}></input>
+                    </div>
 
-                        <div className="form-group">
-                            <input type="submit" value="Add Customer" className="btn btn-primary"></input>
-                        </div>
+                    <div className="form-group">
+                        <input type="submit" value="Add Customer" className="btn btn-primary"></input>
+                    </div>
 
-                    </form>
+                </form>
 
-                </div>
             </div>
-        )
-    }
+        </div>
+    )
 
 }

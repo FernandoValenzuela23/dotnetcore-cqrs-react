@@ -5,7 +5,6 @@ import { useNavigate, useParams } from "react-router-dom";
 export const UpdateUser = () => {
     const params = useParams();
     const id = params.id;
-    console.log(id);
     const navigate = useNavigate();
     const [state, setState] = useState(
         {
@@ -18,11 +17,8 @@ export const UpdateUser = () => {
     );
 
     useEffect(() => {
-        getData('api/User/GetUserDetails/' + id).then(
+        getData('api/User/GetUserDetails/' + id).then(            
             (result) => {
-                //let responseJson = result;
-                console.log("user for edit: ");
-                console.log(result);
                 if (result) {
                     setState({
                         //users: result,
@@ -30,7 +26,8 @@ export const UpdateUser = () => {
                         fullName: result.fullName,
                         userName: result.userName,
                         email: result.email,
-                        loading: false
+                        loading: false,
+                        roles: result.roles
                     });
                 }
             }
@@ -39,28 +36,20 @@ export const UpdateUser = () => {
 
 
     const onChange = (e) => {
-        setState({ [e.target.name]: e.target.value });
+        setState({ ...state, [e.target.name]: e.target.value });
     }
 
     const onKeyDown = (e) => {
         if (e.key === 'Enter') {
-            update(false);
+            //update(false);
         }
     }
 
-
-    // componentDidMount(){
-    //     console.log(props)
-    //     const {id} = props.match.params;
-    // }
-
     const onSubmit = (e) => {
         e.preventDefault();
-        const { history } = props;
-        const { id } = props.match.params;
 
         let userProfile = {
-            id: state.id,
+            id: id,
             fullName: state.fullName,
             email: state.email,
             roles: state.roles
@@ -68,11 +57,10 @@ export const UpdateUser = () => {
 
         putData('api/User/EditUserProfile/' + id, userProfile).then((result) => {
             let responseJson = result;
-            console.log("update response: ");
 
             if (responseJson) {
-                console.log(responseJson);
-                navigate('/admin/users');
+                
+                navigate('/users');
             }
         }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import SessionManager from "../Auth/SessionManager";
 import { postData } from "../services/AccessAPI";
 import { useNavigate } from 'react-router-dom'

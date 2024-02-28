@@ -1,44 +1,40 @@
-import { Component } from "react";
+import { useEffect, useState } from "react";
 import { getData } from "../services/AccessAPI";
+import { useNavigate, useParams } from "react-router-dom";
 
-export default class Roles extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
+export const Roles = () => {
+    const navigate = useNavigate();
+    const params = useParams();
+    const id = params.id;
+
+    const [state, setState] = useState(
+        {
             roles: [],
             loading: true
-        };
+        }
+    );
 
-        this.onRoleCreate = this.onRoleCreate.bind(this);
-        this.onRoleEdit = this.onRoleEdit.bind(this);
-        this.onRoleDelete = this.onRoleDelete.bind(this);
+    useEffect(() => {
+        getAllRoles();
+    }, [])
 
+    const onRoleCreate = () => {
+        navigate('/role/create');
     }
 
-    onRoleCreate(){
-        const { history } = this.props;
-        history.push('/admin/role/create');
+    const onRoleEdit = (id) => {
+        navigate('/role/edit/' + id);
     }
 
-    onRoleEdit(id){
-        const {history} = this.props;
-        history.push('/admin/role/edit/' + id);
+    const onRoleDelete = (id) => {
+        navigate('/role/delete/' + id);
     }
 
-    onRoleDelete(id){
-        const{history} = this.props;
-        history.push('/admin/role/delete/' + id);
-    }
-
-    componentDidMount() {
-        this.getAllRoles();
-    }
-
-    getAllRoles() {
+    const getAllRoles = () => {
         getData('api/Role/GetAll').then(
             (result) => {
                 if (result) {
-                    this.setState({
+                    setState({
                         roles: result,
                         loading: false
                     });
@@ -47,7 +43,7 @@ export default class Roles extends Component {
         );
     }
 
-    populateRolesTable(roles) {
+    const populateRolesTable = (roles) => {
         return (
             <table className="table table-striped">
                 <thead>
@@ -61,8 +57,8 @@ export default class Roles extends Component {
                         roles.map(role => (
                             <tr key={role.id}>
                                 <td>{role.roleName}</td>
-                                <td><button onClick={() => this.onRoleEdit(role.id)} className="btn btn-success">Edit</button> ||
-                                    <button onClick={() => this.onRoleDelete(role.id)} className="btn btn-danger">Delete</button></td>
+                                <td><button onClick={() => onRoleEdit(role.id)} className="btn btn-success">Edit</button> ||
+                                    <button onClick={() => onRoleDelete(role.id)} className="btn btn-danger">Delete</button></td>
                             </tr>
                         ))
                     }
@@ -71,21 +67,24 @@ export default class Roles extends Component {
         );
     }
 
-    render() {
-        let contnet = this.state.loading ? (
-            <p>
-                <em>Loading ... </em>
-            </p>
 
-        ) : (
-            this.populateRolesTable(this.state.roles)
-        )
-        return (
-            <div>
-                <h4>List of roles</h4>
-                <button onClick={() => this.onRoleCreate()} className="btn btn-primary">Create new role</button>
-                {contnet}
-            </div>
-        );
-    }
+    return (
+        <div>
+            <h4>List of roles</h4>
+            <button onClick={() => onRoleCreate()} className="btn btn-primary">Create new role</button>
+            {
+                (state.loading === true) && (
+                    <p>
+                        <em>Loading ... </em>
+                    </p>
+        
+                )
+            } 
+                
+            {(state.loading === false) && (
+                    populateRolesTable(state.roles)
+                )
+            }
+        </div>
+    );
 }

@@ -1,49 +1,44 @@
-import { Component } from "react";
+import { useState } from "react";
 import { postData } from "../services/AccessAPI";
+import { useNavigate } from "react-router-dom";
 
-export default class CreateRole extends Component{
-    constructor(props){
-        super(props);
-        this.state = {
+export const CreateRole = () => {
+    const navigate = useNavigate();
+    const [state, setState] = useState(
+        {
             roleName: '',
             loading: true
-        };
+        }
+    );
 
-        this.onSubmit = this.onSubmit.bind(this);
-        this.onChange = this.onChange.bind(this);
-
-    }
-
-    onSubmit(e){
+    const onSubmit = (e) => {
         e.preventDefault();
-        const{history} = this.props;
 
         let roleObj = {
-            roleName: this.state.roleName
+            roleName: state.roleName
         }
 
         postData('api/Role/Create', roleObj).then((result) => {
             let responseJson = result;
 
-            if(responseJson){
-                history.push('/admin/roles');
+            if (responseJson) {
+                navigate('/roles');
             }
         });
     }
 
-    onChange(e){
-        this.setState({[e.target.name]: e.target.value});
+    const onChange = (e) => {
+        setState({ ...state, [e.target.name]: e.target.value });
     }
 
-    render(){
-        return(
-            <div className="row">
+    return (
+        <div className="row">
             <div className="col-md-4">
                 <h3>Create new role</h3>
-                <form onSubmit={this.onSubmit}>
+                <form onSubmit={e => onSubmit(e)}>
                     <div className="form-group">
                         <label className="control-label">Role Name: </label>
-                        <input className="form-control" type="text" name="roleName" value={this.state.roleName} onChange={this.onChange}></input>
+                        <input className="form-control" type="text" name="roleName" value={state.roleName} onChange={e => onChange(e)}></input>
                     </div>
                     <div className="form-group">
                         <input type="submit" value="Add Role" className="btn btn-primary"></input>
@@ -53,6 +48,5 @@ export default class CreateRole extends Component{
 
             </div>
         </div>
-        );
-    }
+    );
 }
