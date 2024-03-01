@@ -40,6 +40,14 @@ namespace Ordering.Application.Commands.User.Create
                     }
                     
                 }
+                else
+                {
+                    if (request.Roles.Count == 0)
+                    {
+                        request.Roles.Add("User");
+                    }
+                }
+
 
                 var result = await _identityService.CreateUserAsync(request.UserName, request.Password, request.Email, request.FullName, request.Roles);
                 return result.isSucceed ? 1 : 0;

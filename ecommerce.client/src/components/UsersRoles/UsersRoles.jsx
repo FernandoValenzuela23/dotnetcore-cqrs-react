@@ -105,12 +105,12 @@ export default class UsersRole extends Component {
                 <h3>Users Role</h3>
                 <div className="input-group">
                     <input className="col-md-3" type="text" name="userName" placeholder="Enter user name" value={this.state.userName} onChange={this.onChange}></input>
-                    <span class="input-group-addon">&nbsp;</span>
+                    <span className="input-group-addon">&nbsp;</span>
                     <button className="btn btn-primary" onClick={() => this.onSearch(this.state.userName)}>
                         Search
                     </button>
                 </div>
-                <label>Full Name: {this.state.fullName}</label>
+                <label>Full Name: {this.state.fullName}</label><br></br>
                 <label className="col-md-4">User Name: {this.state.userName}</label>
                 <hr></hr>
 

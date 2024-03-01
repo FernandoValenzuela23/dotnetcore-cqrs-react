@@ -51,18 +51,18 @@ export const DeleteRole = () => {
             <h3>Are you sure you want to delete this?</h3>
             <div>
                 <h4>Role Information</h4>
-                <dl class="row">
-                    <dt class="col-sm-2">
+                <dl className="row">
+                    <dt className="col-sm-2">
                         Role Name:
                     </dt>
-                    <dd class="col-sm-10">
+                    <dd className="col-sm-10">
                         {state.roleName}
                     </dd>
                 </dl>
 
                 <form onSubmit={onConfirmation}>
                     <input type="hidden" asp-for="Id" />
-                    <button type="submit" class="btn btn-danger">Delete</button> |
+                    <button type="submit" className="btn btn-danger">Delete</button> |
                     <button onClick={onCancel} className="btn btn-primary">Back to List</button>
                 </form>
             </div>

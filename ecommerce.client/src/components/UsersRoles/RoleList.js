@@ -1,9 +1,7 @@
 const RoleList = (props) => {
 
-    //debugger;
     const roles = props.roles;
     const userRoles = props.userRoles;
-
 
     function isExists(roleName) {
         if (userRoles.length <= 0) return false;
@@ -18,7 +16,7 @@ const RoleList = (props) => {
 
                         <li key={index}>
                             <input type="checkbox" checked={isExists(role.roleName)} value={role.roleName} onChange={props.onChange} ></input>
-                            <span class="input-group-addon">&nbsp;</span>
+                            <span className="input-group-addon">&nbsp;</span>
                             <label>{role.roleName}</label>
                         </li>
                     )
