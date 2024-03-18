@@ -8,6 +8,7 @@ using Ordering.Application.Common.Interfaces;
 using Ordering.Infrastructure;
 using Ordering.Infrastructure.Services;
 using System.Reflection;
+using System.Security.Claims;
 using System.Text;
 
 
@@ -135,7 +136,52 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+// Using my custom Sidecar design pattern Middleware
+app.UseSidecar();
+
 app.Run();
+
+
+
+
+
+
+#region Custom middleware as an example of Sidecar Design Pattern
+
+// TODO: move to separade files and folder, here for understanding only
+public class SidecarMiddleware
+{
+    private readonly RequestDelegate _next;
+    private readonly ILogger<SidecarMiddleware> _logger;
+
+    public SidecarMiddleware(RequestDelegate next, ILogger<SidecarMiddleware> logger)
+    {
+        _next = next;
+        _logger = logger;
+    }
+
+    public async Task Invoke(HttpContext context)
+    {
+        _logger.LogInformation($"Processing request in middleware [Path]: {context.Request.Path}");
+        _logger.LogInformation($"Processing request in middleware [Authenticated]: {context.User.Identity?.IsAuthenticated}");
+
+        // Perform additional processing here, such as caching, logging, monitoring, or authentication
+
+        await _next(context);
+    }
+}
+
+public static class SidecarMiddlewareExtensions
+{
+    public static IApplicationBuilder UseSidecar(this IApplicationBuilder builder)
+    {
+        return builder.UseMiddleware<SidecarMiddleware>();
+    }
+}
+
+#endregion
+
+
 
 
 /*  ORIGINAL
